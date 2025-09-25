@@ -1,11 +1,22 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": {"text": "Mean Household Income of Malaysia by State", "fontSize": 24, "fontWeight": "bold", "font":"Georgia", "anchor": "middle"},
-  "width": 800,
+  "width": 1000,
   "height": 400,
-  "padding": {"left": 50, "right": 0, "top": 20, "bottom": 20},
+  "padding": {"left": 50, "right": 0, "top": 0, "bottom": 20},
   "projection": {"type": "mercator"},
-  "view": {"stroke": "transparent"},
+  "view": {"stroke": "transparent",  "fill": "#d0e5f3"},
+  "params": [
+    {
+      "name": "indicator",
+      "value": "income_mean",
+      "bind": {
+        "input": "select", 
+        "options": ["income_mean", "expenditure_mean", "poverty"],
+        "labels": ["Mean Income", "Mean Expenditure", "Poverty Rate"],
+        "name": "Select Indicator: "
+      }
+    }
+  ],
   "layer": [
     {
       "data": {
@@ -27,19 +38,26 @@
               "url": "https://xuenhan.github.io/FIT3179_Homework9/hies_state_normalized.csv"
             },
             "key": "state",
-            "fields": ["income_mean", "poverty"]
+            "fields": ["income_mean", "expenditure_mean", "poverty"]
           }
+        },
+        {
+          "fold": ["income_mean", "expenditure_mean", "poverty"],
+          "as": ["indicator_field", "indicator_value"]
+        },
+        {
+          "filter": "datum.indicator_field == indicator"
         }
       ],
       "mark": {"type": "geoshape", "stroke": "#aaaaaa", "strokeWidth": 0.5},
       "encoding": {
         "color": {
-          "field": "income_mean",
+          "field": "indicator_value",
           "type": "quantitative",
-          "title": "Mean Household Income (RM)",
+          "title": null,
           "scale": {
             "type": "quantile",
-            "range": ["#f1eef6", "#bdc9e1", "#74a9cf", "#2b8cbe", "#045a8d"]
+            "range": ["#F0F1C5", "#D2D0A0", "#9EBC8A", "#73946B", "#537D5D"]
           },
         "legend": {
           "orient": "right",
@@ -53,9 +71,24 @@
         },
         "tooltip": [
           {"field": "properties.name", "type": "nominal", "title": "State"},
-          {"field": "income_mean", "type": "quantitative", "title": "Mean Income (RM)", "format": ".2f"},
-          {"field": "poverty", "type": "quantitative", "title": "Poverty Rate (%)", "format": ".2f"}
+          {"field": "indicator_field", "type": "nominal", "title": "Indicator"},
+          {"field": "indicator_value", "type": "quantitative", "title": "Value (Normalised)"}
         ]
+      }
+    },
+     {
+      "data": {"values": [{}]},   
+      "transform": [
+        {
+          "calculate": "indicator == 'income_mean' ? 'Mean Income (RM)' : indicator == 'expenditure_mean' ? 'Mean Expenditure (RM)' : 'Poverty Rate (%)'",
+          "as": "legendTitle"
+        }
+      ],
+      "mark": {"type": "text", "fontSize": 10, "fontWeight": "bold", "align": "left"},
+      "encoding": {
+        "x": {"value": 1010},
+        "y": {"value": -10},
+        "text": {"field": "legendTitle"}
       }
     }
   ]
