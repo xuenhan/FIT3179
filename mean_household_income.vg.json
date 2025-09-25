@@ -47,6 +47,14 @@
         },
         {
           "filter": "datum.indicator_field == indicator"
+        },
+         {
+          "calculate": "indicator == 'income_mean' ? 'Mean Income (RM)' : indicator == 'expenditure_mean' ? 'Mean Expenditure (RM)' : 'Poverty Rate (%)'",
+          "as": "tooltipLabel"
+        },
+        {
+          "calculate": "format(datum.indicator_value, '.2f')",
+          "as": "tooltipValue"
         }
       ],
       "mark": {"type": "geoshape", "stroke": "#aaaaaa", "strokeWidth": 0.5},
@@ -71,8 +79,8 @@
         },
         "tooltip": [
           {"field": "properties.name", "type": "nominal", "title": "State"},
-          {"field": "indicator_field", "type": "nominal", "title": "Indicator"},
-          {"field": "indicator_value", "type": "quantitative", "title": "Value (Normalised)"}
+          {"field": "tooltipLabel", "type": "nominal", "title": "Indicator"},
+          {"field": "tooltipValue", "type": "nominal", "title": "Value (Normalised)"}
         ]
       }
     },
@@ -84,7 +92,7 @@
           "as": "legendTitle"
         }
       ],
-      "mark": {"type": "text", "fontSize": 10, "fontWeight": "bold", "align": "left"},
+      "mark": {"type": "text", "fontSize": 12, "fontWeight": "bold", "align": "left"},
       "encoding": {
         "x": {"value": 1010},
         "y": {"value": -10},
