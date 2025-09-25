@@ -64,7 +64,7 @@
           "type": "quantitative",
           "title": null,
           "scale": {
-            "type": "quantile",
+            "type": "linear",
             "range": ["#F0F1C5", "#D2D0A0", "#9EBC8A", "#73946B", "#537D5D"]
           },
         "legend": {
